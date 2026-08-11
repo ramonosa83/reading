@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Income Thermostat Reading — Creating Through Energy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#2a2622;
+    --ink-soft:#57504a;
+    --cream:#faf6f0;
+    --cream-deep:#f3ece2;
+    --card:#ffffff;
+    --gold:#a8843c;
+    --gold-soft:#c9a866;
+    --gold-wash:#f6efdf;
+    --line:#e6ddd0;
+    --serif:'Cormorant Garamond', Georgia, serif;
+    --sans:'Inter', -apple-system, 'Segoe UI', sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    min-height:100vh;
+  }
+  .wrap{max-width:680px;margin:0 auto;padding:48px 24px 80px;}
+  .brand{
+    text-align:center;
+    font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--gold);font-weight:500;margin-bottom:40px;
+  }
+  .screen{display:none;animation:fade .5s ease;}
+  .screen.active{display:block;}
+  @keyframes fade{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:none;}}
+
+  /* ---------- Intro ---------- */
+  h1{
+    font-family:var(--serif);font-weight:500;
+    font-size:clamp(34px,6vw,50px);line-height:1.12;
+    text-align:center;letter-spacing:-.01em;margin-bottom:8px;
+  }
+  h1 em{font-style:italic;color:var(--gold);}
+  .intro-sub{
+    text-align:center;font-family:var(--serif);font-style:italic;
+    font-size:clamp(19px,3vw,23px);color:var(--ink-soft);
+    margin:18px auto 30px;max-width:540px;line-height:1.45;
+  }
+  .intro-body{
+    font-size:16px;color:var(--ink-soft);max-width:560px;margin:0 auto 14px;
+  }
+  .rule{width:56px;height:1px;background:var(--gold-soft);margin:30px auto;}
+  .note{
+    background:var(--gold-wash);border:1px solid var(--line);border-radius:10px;
+    padding:18px 22px;font-size:14.5px;color:var(--ink-soft);
+    max-width:560px;margin:0 auto 34px;font-style:italic;
+  }
+  .btn{
+    display:block;margin:0 auto;
+    background:var(--ink);color:var(--cream);
+    font-family:var(--sans);font-size:15px;font-weight:500;letter-spacing:.04em;
+    border:none;border-radius:999px;padding:17px 44px;cursor:pointer;
+    transition:all .25s ease;
+  }
+  .btn:hover{background:var(--gold);transform:translateY(-1px);}
+  .tiny{
+    text-align:center;font-size:12.5px;color:#9a9186;margin-top:16px;
+  }
+
+  /* ---------- Quiz ---------- */
+  .progress-track{
+    height:3px;background:var(--line);border-radius:99px;margin-bottom:36px;overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;background:var(--gold);width:0%;transition:width .4s ease;border-radius:99px;
+  }
+  .q-count{
+    font-size:11px;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:14px;
+  }
+  .q-title{
+    font-family:var(--serif);font-weight:600;font-size:clamp(22px,4vw,27px);
+    line-height:1.25;margin-bottom:8px;
+  }
+  .q-text{font-size:16.5px;color:var(--ink-soft);margin-bottom:26px;}
+  .opt{
+    display:block;width:100%;text-align:left;
+    background:var(--card);border:1.5px solid var(--line);border-radius:12px;
+    padding:18px 20px;margin-bottom:12px;cursor:pointer;
+    font-family:var(--sans);font-size:15.5px;line-height:1.55;color:var(--ink);
+    transition:all .18s ease;
+  }
+  .opt:hover{border-color:var(--gold-soft);background:var(--gold-wash);transform:translateY(-1px);}
+  .back{
+    background:none;border:none;color:#9a9186;font-size:13px;cursor:pointer;
+    margin-top:10px;font-family:var(--sans);letter-spacing:.02em;
+  }
+  .back:hover{color:var(--gold);}
+
+  /* ---------- Reading transition ---------- */
+  .reading-msg{
+    text-align:center;font-family:var(--serif);font-style:italic;
+    font-size:24px;color:var(--ink-soft);padding:90px 0;
+  }
+  .pulse{display:inline-block;animation:pulse 1.4s ease infinite;}
+  @keyframes pulse{0%,100%{opacity:.35;}50%{opacity:1;}}
+
+  /* ---------- Result ---------- */
+  .result-kicker{
+    text-align:center;font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--gold);font-weight:600;margin-bottom:14px;
+  }
+  .result-name{
+    font-family:var(--serif);font-weight:500;font-size:clamp(34px,6vw,46px);
+    text-align:center;line-height:1.1;margin-bottom:18px;
+  }
+  .oneline{
+    font-family:var(--serif);font-style:italic;font-size:clamp(19px,3vw,22px);
+    color:var(--ink-soft);text-align:center;max-width:560px;margin:0 auto 8px;line-height:1.5;
+  }
+  .secondary{
+    text-align:center;font-size:13.5px;color:#9a9186;margin-top:14px;
+  }
+  .secondary b{color:var(--gold);font-weight:600;}
+  .section{margin-top:44px;}
+  .section h3{
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);
+    font-weight:600;margin-bottom:14px;
+  }
+  .section p{font-size:16px;color:var(--ink-soft);margin-bottom:14px;}
+  .section p b{color:var(--ink);font-weight:600;}
+  .protocol{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:30px 28px;margin-top:6px;
+  }
+  .protocol-title{
+    font-family:var(--serif);font-weight:600;font-size:23px;margin-bottom:6px;
+  }
+  .protocol-sub{font-size:14px;color:#9a9186;font-style:italic;margin-bottom:20px;}
+  .step{display:flex;gap:16px;margin-bottom:20px;}
+  .step:last-child{margin-bottom:0;}
+  .step-num{
+    flex:0 0 30px;height:30px;border-radius:50%;
+    background:var(--gold-wash);border:1px solid var(--gold-soft);
+    color:var(--gold);font-size:13px;font-weight:600;
+    display:flex;align-items:center;justify-content:center;margin-top:2px;
+  }
+  .step-body{font-size:15px;color:var(--ink-soft);line-height:1.6;}
+  .step-body b{color:var(--ink);font-weight:600;}
+  .shift{
+    border-left:2px solid var(--gold-soft);padding:6px 0 6px 22px;margin-top:6px;
+    font-family:var(--serif);font-style:italic;font-size:19px;line-height:1.55;color:var(--ink);
+  }
+  .capture{
+    background:var(--card);border:1px solid var(--line);border-radius:14px;
+    padding:26px 26px 14px;
+  }
+  .capture-copy{font-size:15.5px;color:var(--ink-soft);line-height:1.65;margin-bottom:10px;}
+  .capture-copy b{color:var(--ink);font-weight:600;}
+  #bhform{min-height:120px;}
+  #bhform iframe{max-width:100%;}
+  .integration{
+    background:var(--ink);color:#e9e2d7;border-radius:16px;
+    padding:34px 30px;margin-top:50px;
+  }
+  .integration p{font-size:15.5px;line-height:1.7;margin-bottom:16px;color:#cfc6b8;}
+  .integration p b{color:#fff;font-weight:600;}
+  .integration .cta{
+    display:inline-block;background:var(--gold);color:#fff;text-decoration:none;
+    font-size:15px;font-weight:600;letter-spacing:.03em;
+    border-radius:999px;padding:15px 34px;margin-top:6px;transition:all .25s ease;
+  }
+  .integration .cta:hover{background:var(--gold-soft);transform:translateY(-1px);}
+  .integration .cta-sub{font-size:12.5px;color:#9c937f;margin-top:12px;margin-bottom:0;}
+  .retake{
+    display:block;margin:34px auto 0;background:none;border:none;color:#9a9186;
+    font-size:13px;cursor:pointer;font-family:var(--sans);text-decoration:underline;
+  }
+  .retake:hover{color:var(--gold);}
+  footer{
+    text-align:center;font-size:11.5px;color:#b3aa9d;max-width:520px;
+    margin:56px auto 0;line-height:1.6;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand">Creating Through Energy</div>
+
+  <!-- INTRO -->
+  <div class="screen active" id="intro">
+    <h1>The Income<br><em>Thermostat</em> Reading</h1>
+    <p class="intro-sub">Your nervous system has an income setting — a level of wealth, visibility, and ease it considers safe. Push past it, and your body quietly pulls you back.</p>
+    <div class="rule"></div>
+    <p class="intro-body">This is not a "what's blocking your abundance" quiz. It's a diagnostic built on one premise: <b>you cannot believe your way into a reality your nervous system still codes as dangerous.</b></p>
+    <p class="intro-body">If years of belief work haven't closed the gap between what you know and how you live — that was never a willpower failure. It was a physiological one. This 3-minute reading locates where yours lives — in your <b>Body</b>, your <b>Beliefs</b>, or your <b>Actions</b> — and gives you the exact 7-day protocol for your pattern. Complete, usable, free.</p>
+    <div class="rule"></div>
+    <div class="note">Answer with what <b>actually happens</b> — not what you know, not what you'd coach someone else to do. The gap between those two is exactly what we're reading.</div>
+    <button class="btn" onclick="startQuiz()">Begin the Reading</button>
+    <p class="tiny">8 questions · about 3 minutes · your result appears instantly</p>
+  </div>
+
+  <!-- QUIZ -->
+  <div class="screen" id="quiz">
+    <div class="progress-track"><div class="progress-fill" id="bar"></div></div>
+    <div class="q-count" id="qcount"></div>
+    <div class="q-title" id="qtitle"></div>
+    <div class="q-text" id="qtext"></div>
+    <div id="opts"></div>
+    <button class="back" id="backBtn" onclick="goBack()">← previous question</button>
+  </div>
+
+  <!-- READING TRANSITION -->
+  <div class="screen" id="reading">
+    <div class="reading-msg"><span class="pulse">Reading your setting…</span></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="result">
+    <div class="result-kicker">Your Reading</div>
+    <div class="result-name" id="rname"></div>
+    <p class="oneline" id="roneline"></p>
+    <p class="secondary" id="rsecondary"></p>
+    <div class="section"><h3>What's actually happening</h3><div id="rhappening"></div></div>
+    <div class="section"><h3>Why nothing stuck</h3><div id="rstuck"></div></div>
+    <div class="section">
+      <h3>Your protocol</h3>
+      <div class="protocol">
+        <div class="protocol-title" id="pname"></div>
+        <div class="protocol-sub" id="psub"></div>
+        <div id="psteps"></div>
+      </div>
+    </div>
+    <div class="section">
+      <h3>Run it one day at a time</h3>
+      <div class="capture">
+        <p class="capture-copy" id="capturecopy"></p>
+        <div id="bhform"></div>
+      </div>
+    </div>
+    <div class="section"><h3>What changes when this lifts</h3><div class="shift" id="rshift"></div></div>
+    <div class="integration">
+      <div id="rintegration"></div>
+      <a class="cta" href="https://innercircle.creatingthroughenergy.com" target="_blank" rel="noopener">Step into the Inner Circle — $47/mo</a>
+      <p class="cta-sub">Cancel anytime · The 30-Day Subconscious Reset is included when you join</p>
+    </div>
+    <button class="retake" onclick="restart()">Retake the reading</button>
+  </div>
+
+  <footer>This reading is for education and self-reflection. It is not medical, psychological, or financial advice. Member experiences referenced anywhere in this work are their own.<br><br>© Creating Through Energy · Ramon Osa</footer>
+</div>
+
+<script>
+// layers: B = Body, BL = Belief, A = Action
+const QUESTIONS = [
+  {
+    title:"The Price Moment",
+    text:"You're about to tell someone your price — or ask for the number you actually want. In the half-second before it leaves your mouth, what happens most often?",
+    opts:[
+      ["Your throat tightens, your chest braces, and the number comes out smaller than the one you planned.","B"],
+      ["A voice says “who do you think you are, charging that?” — and you hear yourself justifying the price before they've even reacted.","BL"],
+      ["You say it cleanly — then spend the next hour checking your phone, half-hoping they say no.","A"]
+    ]
+  },
+  {
+    title:"The Send Button",
+    text:"You planned the bold move all week. The email, the offer, the announcement. The moment arrives. What actually happens?",
+    opts:[
+      ["You reread it and decide it needs one more edit. It has needed one more edit for three weeks.","BL"],
+      ["Your body just… won't. Your hands don't move. You feel heavy, foggy, suddenly exhausted.","B"],
+      ["You send it — then immediately soften it: a discount, a disclaimer, a follow-up walking it back.","A"]
+    ]
+  },
+  {
+    title:"Money Arrives",
+    text:"Unexpected money shows up — a refund, a gift, a payment you weren't tracking. What's your first internal response, before the thought even forms?",
+    opts:[
+      ["A jolt, almost like being startled — then bracing, waiting for the other shoe.","B"],
+      ["Instant math on why it doesn't really count, who you owe, why you can't keep it.","BL"],
+      ["Nothing at first — but within days you've found a way to move it out. An expense appears. You over-give.","A"]
+    ]
+  },
+  {
+    title:"The Visualization",
+    text:"When you sit to visualize the life you're building — the practice you've done a hundred times — what's your honest experience?",
+    opts:[
+      ["You see it clearly, but a commentator narrates the whole time: “lovely — but that's not realistic for you.”","BL"],
+      ["You can't stay in it. Restless, itchy, yanked out — sometimes close to tears with no idea why.","B"],
+      ["The session feels wonderful. Then you stand up and do exactly nothing differently.","A"]
+    ]
+  },
+  {
+    title:"Being Seen",
+    text:"Someone praises your work publicly, or a bigger opportunity approaches you directly. What fires first?",
+    opts:[
+      ["You deflect, delay the reply, “forget” to follow up — until the window quietly closes.","A"],
+      ["Heat in your face, a physical urge to shrink or disappear. Visibility feels like exposure.","B"],
+      ["The certainty that they're about to find out you're not as good as they think.","BL"]
+    ]
+  },
+  {
+    title:"The Journal Gap",
+    text:"There's the version of you in your journal — clear, calm, certain. And the one who shows up when it's time to actually do the thing. What separates them?",
+    opts:[
+      ["The journal-you is relaxed; the real-you is braced. You can feel the difference in your body.","B"],
+      ["You know the concepts cold — but in the moment, a lower “setting” of you takes the wheel.","BL"],
+      ["You do show up — in bursts. A brilliant week, then a quiet month you can't explain.","A"]
+    ]
+  },
+  {
+    title:"When It's Working",
+    text:"Best month in ages. Momentum. Ease. Things are working. What does your system do with that?",
+    opts:[
+      ["You start predicting the crash. “This can't last” runs on a loop.","BL"],
+      ["You pick that exact moment to break something — miss the deadline, start the conflict, go silent.","A"],
+      ["Anxiety rises with the success. Sleep gets worse. You're most on-guard exactly when things are best.","B"]
+    ]
+  },
+  {
+    title:"Rest",
+    text:"Your honest relationship with rest:",
+    opts:[
+      ["You schedule it — and then fill it with productive tasks anyway.","A"],
+      ["Rest has to be earned, and somehow you've never quite earned it yet.","BL"],
+      ["You can't actually rest. “Relaxing” is just bracing, lying down.","B"]
+    ]
+  }
+];
+
+const PROFILES = {
+  B:{
+    name:"The Braced Baseline",
+    layer:"Body",
+    oneline:"Your freeze lives below your thoughts. Your nervous system codes success, visibility, and money itself as threat — and it vetoes your plans before your mind is even consulted.",
+    happening:`<p>Somewhere along the way, your body learned that expansion isn't safe. More money, more visibility, more ease — your survival system files these under <b>exposure</b>. So it does its job: the tight throat before the price, the exhaustion before the send button, the startle when money arrives, the bracing that never fully switches off. That low-grade on-guard feeling you carry without noticing? That's not a personality trait. That's a nervous system holding a thermostat setting.</p><p>Here's the part that matters: <b>none of this was a failure of belief, discipline, or desire.</b> You cannot out-think a body that believes it's protecting your life. The body overrides the mind — every time, by design. You weren't doing the work wrong. You were handed work that starts at step two.</p>`,
+    stuck:`<p>Affirmations, visualization, scripting — all of it is <b>Belief-layer</b> work. Beautiful tools, wrong floor. Installing a new belief into a threatened body is like renovating a house that's on fire. The renovation isn't the problem. The fire is. <b>Safety before strategy</b> — there is no other order that works.</p>`,
+    pname:"The 7-Day Safety Install",
+    psub:"Daily, ten minutes, seven days. The goal is not relaxation — it's teaching your body, through repetition, that safety is the new baseline.",
+    steps:[
+      ["<b>Discharge (3 min).</b> Five physiological sighs: double inhale through the nose — one full breath, then a short top-up sip of air — followed by a long, slow exhale through the mouth. This is the fastest known voluntary lever on the autonomic nervous system. Let the exhale be longer than feels natural."],
+      ["<b>Orient (2 min).</b> Slowly turn your head and let your eyes land on five things in the room, naming each silently. Orienting is how a mammal's brain confirms <b>no threat present</b> — you're speaking your body's native language."],
+      ["<b>Anchor (3 min).</b> One hand flat on your sternum. Recall one specific memory where you were completely safe — not impressive, just safe. A kitchen, a porch, a person. Stay until one physical marker shifts: shoulders drop, jaw unclenches, breath deepens on its own. <b>That shift is the install.</b>"],
+      ["<b>Pair (2 min).</b> While still in that state, do one small money-adjacent act. Open the banking app. Look at your price list. Read your own offer. You are pairing regulated state with money stimulus. Seven days of this, and the wire starts to move."]
+    ],
+    shift:"You know that moment when you're about to say your price and your throat tightens and you discount it before they even respond? That moment stops happening. Not because you pushed through it — because there's nothing left to push through.",
+    integration:`<p>One honest thing about this protocol: it will move your baseline, and it will move it this week. What it won't do is <b>hold</b> it there. Thermostats drift back to the old setting without a room that keeps recalibrating them — that's not a flaw in you, it's how nervous systems work.</p><p>That's what the Inner Circle is: monthly live somatic work, in an intentionally small room, where this exact pattern gets worked in your body in real time — not read about. If this reading felt like being seen, that's the room where it continues.</p>`
+  },
+  BL:{
+    name:"The Ceiling Setting",
+    layer:"Belief",
+    oneline:"Your body can hold more than you're letting it. The cap lives one floor up — in identity-level programming that decides, before you do, what “someone like you” is allowed to have.",
+    happening:`<p>You have a commentator. You heard it in this reading — the voice that narrates <b>“not realistic for you”</b> over your own visualization, that runs <b>“this can't last”</b> across your best month, that has you justifying your price before anyone objected. That voice isn't insight. It's a <b>ceiling</b> — an identity-level setting installed long ago, usually in someone else's voice, that quietly edits every plan down to what the old identity can co-sign.</p><p>And here's your absolution: <b>you never lacked belief in the work. The work was fighting a belief that got there first.</b> The ceiling always wins against effort, because effort is negotiating with the very identity that set the cap.</p>`,
+    stuck:`<p>You've done real belief work — probably more than most coaches who'd try to sell you belief work. But generic affirmations bounce off a specific ceiling. <b>“I am abundant”</b> doesn't touch <b>“people like us don't charge that.”</b> The ceiling is precise; the tools you were given were vague. Precision is what was missing — not repetition, not faith, not another journal.</p>`,
+    pname:"The 7-Day Ceiling Trace",
+    psub:"Ten minutes each evening, for seven days. You are going to catch the ceiling speaking verbatim — then reinstall over it in the only state where installs actually take.",
+    steps:[
+      ["<b>Catch (3 min).</b> Replay the day and find one moment the ceiling spoke. Write the sentence <b>word for word</b> — not the theme, the exact phrasing. (“Who do you think you are.” “That's not for people like us.” “Don't get ahead of yourself.”) The power is in the verbatim; paraphrase and it stays fog."],
+      ["<b>Trace (2 min).</b> Two questions, written fast, no overthinking: <b>Whose voice is that, originally?</b> and <b>How old were you when it moved in?</b> You're not excavating trauma — you're filing the sentence where it belongs: as inherited, not true."],
+      ["<b>Regulate (2 min).</b> Before installing anything: four long-exhale breaths, shoulders down, one hand on the sternum. <b>A belief only rewrites in a body that feels safe</b> — this step is why every previous attempt slid off. This is the step the industry skips."],
+      ["<b>Reinstall (3 min).</b> In that regulated state, speak the replacement — first person, present tense, specific to today's ceiling sentence. Against “people like us don't charge that”: <b>“I charge what the work is worth, and the right people pay it easily.”</b> Say it until your body doesn't flinch on the last word. The flinch is your progress meter — track it losing charge across the seven days."]
+    ],
+    shift:"That gap between the version of you in your journal and the one who shows up when it's time to actually do the thing? It closes. Same person, both places.",
+    integration:`<p>One honest thing about this protocol: it will find your ceiling, and by day seven the sentence you caught will have lost most of its charge. But ceilings re-form — the same environments and old rooms that installed the first one keep broadcasting, and a week of new identity needs somewhere to keep <b>being</b> the new identity.</p><p>That's what the Inner Circle is: a small room recalibrated monthly — live coaching, hot seats, and the somatic work that keeps installs from sliding. If this reading named a voice you recognized, that's the room where it stops getting the last word.</p>`
+  },
+  A:{
+    name:"The Pull-Back Pattern",
+    layer:"Action",
+    oneline:"You can regulate. You've upgraded the beliefs. Your pattern fires at the threshold — the precise moment of action, where an automatic pull-back loop takes the wheel and calls itself a decision.",
+    happening:`<p>Yours is the sneakiest pattern, because it wears a disguise. It looks like procrastination, “timing,” perfectionism, busyness, or that mysterious quiet month after a brilliant week. But look at the shape of it: you <b>approach</b> the threshold — the send, the ask, the follow-up, the keeping of the money — and something automatic reels you back, then hands you a reasonable-sounding story for why.</p><p>The sabotage spike right when things are working isn't bad luck. It's a loop, and it fires <b>because</b> things are working — success is taking you past the setting your system agreed to. Your absolution: <b>the pull-back is not a character flaw and was never laziness.</b> It's a well-rehearsed protective reflex. You've been blaming your discipline for something your discipline was never in charge of.</p>`,
+    stuck:`<p>Every fix you've tried has been a push: more accountability, more willpower, more planning, harder deadlines. But pushing against a pull-back loop is arm-wrestling your own reflex — the reflex is faster, and it doesn't get tired. The loop doesn't break under force. It breaks under <b>exposure</b>: being caught in the act, named, and given ninety seconds of a different move.</p>`,
+    pname:"The 90-Second Threshold Catch",
+    psub:"Daily for seven days. This one happens in the moment — so the first step is preparation.",
+    steps:[
+      ["<b>Pre-name the threshold (each morning, 1 min).</b> Choose today's one threshold moment in advance — the specific send, ask, post, or follow-up where the pull-back usually wins. Write it down. A named threshold can be caught; an unnamed one ambushes you."],
+      ["<b>Learn its signature.</b> The pull-back has a physical opening move — a sudden urge to check something, a wave of tiredness, an itch to “quickly” do a different task, a thought beginning with <b>“I'll just first…”</b>. That signature is your alarm bell, not your instruction."],
+      ["<b>Catch and name (the moment it fires).</b> Stop. Out loud if you can: <b>“This is the pull-back — not the truth.”</b> Naming moves it from autopilot to observed, and an observed loop loses its main advantage: invisibility."],
+      ["<b>Downshift (30 sec).</b> Three physiological sighs — double inhale through the nose, long slow exhale. You're not powering through; you're taking the reflex's fuel — threat arousal — out of the tank."],
+      ["<b>Take the smallest version — within 90 seconds.</b> Not the whole bold move. The smallest real slice: send the email without the extra paragraph. Make the ask in one sentence. The loop is broken by <b>any</b> completed pass through the threshold — size doesn't matter, direction does."],
+      ["<b>Log the catch (evening, 1 min).</b> One line: what fired, what you named, what you did. Seven days of logs will show you the loop weakening on paper — and that record is worth more than a month of motivation."]
+    ],
+    shift:"That Sunday-night dread, where you've planned the bold move all week and your body just… won't let you press send? That goes away. The plans and the follow-through finally belong to the same week.",
+    integration:`<p>One honest thing about this protocol: catching the pull-back works, and the log will prove it to you within days. But loops rebuild in isolation — the reflex waits out your vigilance, and solo willpower is exactly the resource this pattern knows how to outlast.</p><p>What breaks it permanently is live reps in a room that knows the move: that's the Inner Circle. Monthly live coaching and hot seats where the pull-back gets caught <b>with</b> you in real time, plus the somatic work that takes its fuel away. If this reading described your quiet months a little too accurately, that's the room where they end.</p>`
+  }
+};
+
+const LAYER_NAMES = {B:"Body", BL:"Belief", A:"Action"};
+
+// Beehiiv subscribe forms — one per profile, each wired to its own automation
+const BEEHIIV_FORMS = {
+  B:  "25957973-0e5a-46a9-b2d6-40a8f45f3a15",  // Reading — Braced Baseline
+  BL: "c3fbcf2e-8e42-4923-9275-257a1a41e972",  // Reading — Ceiling Trace
+  A:  "cc9639c5-9964-458a-a577-827d43780014"   // Reading — Threshold Catch
+};
+const CAPTURE_COPY = {
+  B:  "The 7-Day Safety Install works best run one day at a time. Want it delivered that way? <b>Each day's step lands in your inbox each morning — nothing else attached to it.</b>",
+  BL: "The 7-Day Ceiling Trace works best run one day at a time. Want it delivered that way? <b>Each day's step lands in your inbox each evening, right when you'll run it — nothing else attached to it.</b>",
+  A:  "The 90-Second Threshold Catch works best practiced one day at a time. Want it delivered that way? <b>Each day's step lands in your inbox each morning — nothing else attached to it.</b>"
+};
+
+function mountBeehiivForm(layer){
+  const box = document.getElementById('bhform');
+  box.innerHTML = '';
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://subscribe-forms.beehiiv.com/v3/loader.js';
+  s.setAttribute('data-beehiiv-form', BEEHIIV_FORMS[layer]);
+  box.appendChild(s);
+}
+let current = 0;
+let answers = [];
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function startQuiz(){
+  current = 0; answers = [];
+  show('quiz');
+  renderQuestion();
+}
+
+function renderQuestion(){
+  const q = QUESTIONS[current];
+  document.getElementById('bar').style.width = ((current)/QUESTIONS.length*100)+'%';
+  document.getElementById('qcount').textContent = 'Question ' + (current+1) + ' of ' + QUESTIONS.length;
+  document.getElementById('qtitle').textContent = q.title;
+  document.getElementById('qtext').textContent = q.text;
+  const box = document.getElementById('opts');
+  box.innerHTML = '';
+  q.opts.forEach(function(o){
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = o[0];
+    b.onclick = function(){ pick(o[1]); };
+    box.appendChild(b);
+  });
+  document.getElementById('backBtn').style.visibility = current === 0 ? 'hidden' : 'visible';
+}
+
+function pick(layer){
+  answers[current] = layer;
+  if(current < QUESTIONS.length - 1){
+    current++;
+    renderQuestion();
+  } else {
+    document.getElementById('bar').style.width = '100%';
+    show('reading');
+    setTimeout(showResult, 1600);
+  }
+}
+
+function goBack(){
+  if(current > 0){ current--; renderQuestion(); }
+}
+
+function computeResult(){
+  const counts = {B:0, BL:0, A:0};
+  answers.forEach(function(a){ counts[a]++; });
+  // Primary: highest count. Tie-breaks mirror the method: Body wins any tie; Belief beats Action.
+  const order = ['B','BL','A'];
+  let primary = order[0];
+  order.forEach(function(k){ if(counts[k] > counts[primary]) primary = k; });
+  // ensure tie-break priority: iterate in priority order, take first with max count
+  const max = Math.max(counts.B, counts.BL, counts.A);
+  for(const k of order){ if(counts[k] === max){ primary = k; break; } }
+  // Secondary: next-highest among remaining, same priority order on ties
+  const rest = order.filter(function(k){ return k !== primary; });
+  const restMax = Math.max(counts[rest[0]], counts[rest[1]]);
+  let secondary = null;
+  if(restMax > 0){
+    for(const k of rest){ if(counts[k] === restMax){ secondary = k; break; } }
+  }
+  return {primary: primary, secondary: secondary, counts: counts};
+}
+
+function showResult(){
+  const r = computeResult();
+  const p = PROFILES[r.primary];
+  document.getElementById('rname').textContent = p.name;
+  document.getElementById('roneline').textContent = p.oneline;
+  const sec = document.getElementById('rsecondary');
+  if(r.secondary){
+    sec.innerHTML = 'Primary pattern: <b>' + p.layer + ' layer</b> · Secondary pattern: <b>' + LAYER_NAMES[r.secondary] + ' layer</b>';
+  } else {
+    sec.innerHTML = 'Primary pattern: <b>' + p.layer + ' layer</b>';
+  }
+  document.getElementById('rhappening').innerHTML = p.happening;
+  document.getElementById('rstuck').innerHTML = p.stuck;
+  document.getElementById('pname').textContent = p.pname;
+  document.getElementById('psub').textContent = p.psub;
+  const stepsBox = document.getElementById('psteps');
+  stepsBox.innerHTML = '';
+  p.steps.forEach(function(s, i){
+    const d = document.createElement('div');
+    d.className = 'step';
+    d.innerHTML = '<div class="step-num">' + (i+1) + '</div><div class="step-body">' + s[0] + '</div>';
+    stepsBox.appendChild(d);
+  });
+  document.getElementById('rshift').textContent = p.shift;
+  document.getElementById('rintegration').innerHTML = p.integration;
+  document.getElementById('capturecopy').innerHTML = CAPTURE_COPY[r.primary];
+  mountBeehiivForm(r.primary);
+  show('result');
+}
+
+function restart(){
+  current = 0; answers = [];
+  show('intro');
+}
+</script>
+</body>
+</html>
