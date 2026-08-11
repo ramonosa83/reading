@@ -238,7 +238,7 @@
     <p class="oneline" id="roneline"></p>
     <p class="secondary" id="rsecondary"></p>
     <div class="section"><h3>What's actually happening</h3><div id="rhappening"></div></div>
-    <div class="section"><h3>Why nothing stuck</h3><div id="rstuck"></div></div>
+    <div class="section"><h3 id="hstuck">Why nothing stuck</h3><div id="rstuck"></div></div>
     <div class="section">
       <h3>Your protocol</h3>
       <div class="protocol">
@@ -247,14 +247,14 @@
         <div id="psteps"></div>
       </div>
     </div>
-    <div class="section">
+    <div class="section" id="captureWrap">
       <h3>Run it one day at a time</h3>
       <div class="capture">
         <p class="capture-copy" id="capturecopy"></p>
         <div id="bhform"></div>
       </div>
     </div>
-    <div class="section"><h3>What changes when this lifts</h3><div class="shift" id="rshift"></div></div>
+    <div class="section"><h3 id="hshift">What changes when this lifts</h3><div class="shift" id="rshift"></div></div>
     <div class="integration">
       <div id="rintegration"></div>
       <a class="cta" href="https://innercircle.creatingthroughenergy.com" target="_blank" rel="noopener">Step into the Inner Circle — $47/mo</a>
@@ -275,7 +275,8 @@ const QUESTIONS = [
     opts:[
       ["Your throat tightens, your chest braces, and the number comes out smaller than the one you planned.","B"],
       ["A voice says “who do you think you are, charging that?” — and you hear yourself justifying the price before they've even reacted.","BL"],
-      ["You say it cleanly — then spend the next hour checking your phone, half-hoping they say no.","A"]
+      ["You say it cleanly — then spend the next hour checking your phone, half-hoping they say no.","A"],
+      ["Honestly? The number comes out clean these days. That moment used to have teeth — it doesn't anymore.","N"]
     ]
   },
   {
@@ -284,7 +285,8 @@ const QUESTIONS = [
     opts:[
       ["You reread it and decide it needs one more edit. It has needed one more edit for three weeks.","BL"],
       ["Your body just… won't. Your hands don't move. You feel heavy, foggy, suddenly exhausted.","B"],
-      ["You send it — then immediately soften it: a discount, a disclaimer, a follow-up walking it back.","A"]
+      ["You send it — then immediately soften it: a discount, a disclaimer, a follow-up walking it back.","A"],
+      ["I send it. Not always perfectly — but the planned thing generally goes out the week I planned it.","N"]
     ]
   },
   {
@@ -293,7 +295,8 @@ const QUESTIONS = [
     opts:[
       ["A jolt, almost like being startled — then bracing, waiting for the other shoe.","B"],
       ["Instant math on why it doesn't really count, who you owe, why you can't keep it.","BL"],
-      ["Nothing at first — but within days you've found a way to move it out. An expense appears. You over-give.","A"]
+      ["Nothing at first — but within days you've found a way to move it out. An expense appears. You over-give.","A"],
+      ["A genuine little hit of delight — “thank you, more of that.” It gets to stay.","N"]
     ]
   },
   {
@@ -302,7 +305,8 @@ const QUESTIONS = [
     opts:[
       ["You see it clearly, but a commentator narrates the whole time: “lovely — but that's not realistic for you.”","BL"],
       ["You can't stay in it. Restless, itchy, yanked out — sometimes close to tears with no idea why.","B"],
-      ["The session feels wonderful. Then you stand up and do exactly nothing differently.","A"]
+      ["The session feels wonderful. Then you stand up and do exactly nothing differently.","A"],
+      ["I can drop in, stay there, and it feels true — I leave those sessions steadier than I entered.","N"]
     ]
   },
   {
@@ -311,7 +315,8 @@ const QUESTIONS = [
     opts:[
       ["You deflect, delay the reply, “forget” to follow up — until the window quietly closes.","A"],
       ["Heat in your face, a physical urge to shrink or disappear. Visibility feels like exposure.","B"],
-      ["The certainty that they're about to find out you're not as good as they think.","BL"]
+      ["The certainty that they're about to find out you're not as good as they think.","BL"],
+      ["I can take it in now. A real “thank you” — and the opportunity gets an actual response.","N"]
     ]
   },
   {
@@ -320,7 +325,8 @@ const QUESTIONS = [
     opts:[
       ["The journal-you is relaxed; the real-you is braced. You can feel the difference in your body.","B"],
       ["You know the concepts cold — but in the moment, a lower “setting” of you takes the wheel.","BL"],
-      ["You do show up — in bursts. A brilliant week, then a quiet month you can't explain.","A"]
+      ["You do show up — in bursts. A brilliant week, then a quiet month you can't explain.","A"],
+      ["Honestly, they're mostly the same person now. What I write is pretty much how I show up.","N"]
     ]
   },
   {
@@ -329,7 +335,8 @@ const QUESTIONS = [
     opts:[
       ["You start predicting the crash. “This can't last” runs on a loop.","BL"],
       ["You pick that exact moment to break something — miss the deadline, start the conflict, go silent.","A"],
-      ["Anxiety rises with the success. Sleep gets worse. You're most on-guard exactly when things are best.","B"]
+      ["Anxiety rises with the success. Sleep gets worse. You're most on-guard exactly when things are best.","B"],
+      ["I can let it be good. Momentum feels enjoyable now — not dangerous.","N"]
     ]
   },
   {
@@ -338,7 +345,8 @@ const QUESTIONS = [
     opts:[
       ["You schedule it — and then fill it with productive tasks anyway.","A"],
       ["Rest has to be earned, and somehow you've never quite earned it yet.","BL"],
-      ["You can't actually rest. “Relaxing” is just bracing, lying down.","B"]
+      ["You can't actually rest. “Relaxing” is just bracing, lying down.","B"],
+      ["I rest — actually rest, without earning it first. Took years, but it's real.","N"]
     ]
   }
 ];
@@ -397,6 +405,24 @@ const PROFILES = {
     shift:"That Sunday-night dread, where you've planned the bold move all week and your body just… won't let you press send? That goes away. The plans and the follow-through finally belong to the same week.",
     integration:`<p>One honest thing about this protocol: catching the pull-back works, and the log will prove it to you within days. But loops rebuild in isolation — the reflex waits out your vigilance, and solo willpower is exactly the resource this pattern knows how to outlast.</p><p>What breaks it permanently is live reps in a room that knows the move: that's the Inner Circle. Monthly live coaching and hot seats where the pull-back gets caught <b>with</b> you in real time, plus the somatic work that takes its fuel away. If this reading described your quiet months a little too accurately, that's the room where they end.</p>`
   }
+};
+
+PROFILES.CLEAR = {
+  name:"The Open Setting",
+  layer:"Clear",
+  oneline:"Your thermostat is set high — and holding. The work you've done actually landed. What's left isn't a freeze. It's a frontier.",
+  happening:`<p>This is the rarest result this reading gives, so let's be honest about what it means: your body largely allows, your inner narrator has mostly gone quiet, and the things you plan tend to actually ship. Money gets to arrive and stay. Rest is real. That combination doesn't happen by accident — it's the signature of someone who has done years of actual work, in the right order, and let it integrate.</p><p>So no, we're not going to invent a problem for you. A diagnostic you can trust when it says something's wrong has to be equally willing to say: <b>nothing much is.</b></p>`,
+  stuck:`<p>Here's the one thing worth knowing about a high setting: it isn't a finish line, it's a <b>current altitude</b>. The moments you didn't mark clean — if there were any — aren't failures. They're the edge of your range: the exact places where your <em>next</em> setting begins. At your stage, the work stops being repair and becomes expansion.</p>`,
+  pname:"The 7-Day Expansion Walk",
+  psub:"Daily, ten minutes plus one act. A clear baseline isn't for protecting — it's for raising.",
+  steps:[
+    ["<b>Keep the floor (5 min).</b> Whatever daily practice built this baseline — breath, meditation, movement — do not retire it now that it's “working.” Clear settings drift too. Five minutes, every morning, non-negotiable."],
+    ["<b>Choose the next-size act (2 min).</b> Each morning, name one action slightly bigger than your current normal — the price a notch higher, the ask a shade bolder, the offer to the room you'd usually consider above your weight. Not a leap. One size up."],
+    ["<b>Take it from the regulated state — same day.</b> Do your practice, then act while the body is soft. You're teaching your system that the next altitude is as safe as this one."],
+    ["<b>Log the ceiling-flickers (1 min, evening).</b> At the new size, old voices sometimes flicker back on. One line per night: did anything brace, narrate, or pull back at the bigger size? That log is the map of your next frontier."]
+  ],
+  shift:"The question quietly shifts from “what's blocking me?” to “what am I building next?” — and your nervous system comes along for the ride instead of driving.",
+  integration:`<p>One honest thing: you may not need a room to fix anything — and I'm not going to pretend otherwise. But there's a second use for a room like the Inner Circle that most people never see, because they arrive needing repair: it's where a clear setting goes to <b>play offense</b>. Live monthly work at your next size, hot seats where your edge gets found faster than you'd find it alone, and a community where you're often the proof someone else needs.</p><p>If that sounds like your stage, come sit with us. If not — keep walking the edge. You clearly know the way.</p>`
 };
 
 const LAYER_NAMES = {B:"Body", BL:"Belief", A:"Action"};
@@ -472,23 +498,29 @@ function goBack(){
 }
 
 function computeResult(){
-  const counts = {B:0, BL:0, A:0};
+  const counts = {B:0, BL:0, A:0, N:0};
   answers.forEach(function(a){ counts[a]++; });
-  // Primary: highest count. Tie-breaks mirror the method: Body wins any tie; Belief beats Action.
   const order = ['B','BL','A'];
-  let primary = order[0];
-  order.forEach(function(k){ if(counts[k] > counts[primary]) primary = k; });
-  // ensure tie-break priority: iterate in priority order, take first with max count
+  // Clear result: 6+ of 8 answered clean → The Open Setting
+  if(counts.N >= 6){
+    let edge = null;
+    const patMax = Math.max(counts.B, counts.BL, counts.A);
+    if(patMax > 0){
+      for(const k of order){ if(counts[k] === patMax){ edge = k; break; } }
+    }
+    return {primary:'CLEAR', secondary:null, edge:edge, counts:counts};
+  }
+  // Otherwise: highest pattern count wins. Tie-breaks mirror the method: Body wins any tie; Belief beats Action.
   const max = Math.max(counts.B, counts.BL, counts.A);
+  let primary = order[0];
   for(const k of order){ if(counts[k] === max){ primary = k; break; } }
-  // Secondary: next-highest among remaining, same priority order on ties
   const rest = order.filter(function(k){ return k !== primary; });
   const restMax = Math.max(counts[rest[0]], counts[rest[1]]);
   let secondary = null;
   if(restMax > 0){
     for(const k of rest){ if(counts[k] === restMax){ secondary = k; break; } }
   }
-  return {primary: primary, secondary: secondary, counts: counts};
+  return {primary: primary, secondary: secondary, edge:null, counts: counts};
 }
 
 function showResult(){
@@ -497,8 +529,16 @@ function showResult(){
   document.getElementById('rname').textContent = p.name;
   document.getElementById('roneline').textContent = p.oneline;
   const sec = document.getElementById('rsecondary');
-  if(r.secondary){
-    sec.innerHTML = 'Primary pattern: <b>' + p.layer + ' layer</b> · Secondary pattern: <b>' + LAYER_NAMES[r.secondary] + ' layer</b>';
+  if(r.primary === 'CLEAR'){
+    if(r.edge){
+      sec.innerHTML = 'Setting: <b>largely open</b> · Remaining edge: <b>' + LAYER_NAMES[r.edge] + ' layer</b>';
+    } else {
+      sec.innerHTML = 'Setting: <b>open across all three layers</b>';
+    }
+  } else if(r.secondary){
+    let line = 'Primary pattern: <b>' + p.layer + ' layer</b> · Secondary: <b>' + LAYER_NAMES[r.secondary] + ' layer</b>';
+    if(r.counts.N >= 3){ line += ' · <b>' + r.counts.N + ' of 8</b> already running clear'; }
+    sec.innerHTML = line;
   } else {
     sec.innerHTML = 'Primary pattern: <b>' + p.layer + ' layer</b>';
   }
@@ -516,8 +556,17 @@ function showResult(){
   });
   document.getElementById('rshift').textContent = p.shift;
   document.getElementById('rintegration').innerHTML = p.integration;
-  document.getElementById('capturecopy').innerHTML = CAPTURE_COPY[r.primary];
-  mountBeehiivForm(r.primary);
+  if(r.primary === 'CLEAR'){
+    document.getElementById('hstuck').textContent = 'The one thing to know';
+    document.getElementById('hshift').textContent = 'What changes now';
+    document.getElementById('captureWrap').style.display = 'none';
+  } else {
+    document.getElementById('hstuck').textContent = 'Why nothing stuck';
+    document.getElementById('hshift').textContent = 'What changes when this lifts';
+    document.getElementById('captureWrap').style.display = '';
+    document.getElementById('capturecopy').innerHTML = CAPTURE_COPY[r.primary];
+    mountBeehiivForm(r.primary);
+  }
   show('result');
 }
 
